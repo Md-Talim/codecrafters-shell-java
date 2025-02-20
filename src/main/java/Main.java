@@ -1,14 +1,21 @@
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) throws Exception {
-        System.out.print("$ ");
+  public static void main(String[] args) throws Exception {
+    System.out.print("$ ");
 
-        Scanner scanner = new Scanner(System.in);
-        String input = scanner.nextLine();
+    Scanner scanner = new Scanner(System.in);
 
-        System.out.println(input + ": command not found");
+    while (true) {
+      String input = scanner.nextLine();
 
-        scanner.close();
+      if (input.contains("exit")) {
+          break;
+      }
+
+      System.out.println(input + ": command not found");
     }
+
+    scanner.close();
+  }
 }
