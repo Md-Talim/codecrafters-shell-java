@@ -1,4 +1,3 @@
-import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -8,31 +7,15 @@ public class Main {
     while (true) {
       System.out.print("$ ");
       String input = scanner.nextLine();
-      Parser parser = new Parser(input);
-      List<String> arguments = parser.parse();
+      Shell shell = new Shell(input);
 
-      String command = arguments.get(0);
+      shell.execute();
 
-      switch (command) {
-        case "echo" -> {
-          int lastIdx = arguments.size() - 1;
-
-          for (int i = 1; i < arguments.size(); i++) {
-            System.out.print(arguments.get(i));
-
-            if (i != lastIdx) System.out.print(" ");
-          }
-
-          System.out.println();
-        }
-        case "exit" -> {
-          scanner.close();
-          System.exit(0);
-        }
-        default -> {
-          System.out.println(input + ": command not found");
-        }
+      if (shell.isExitCommand()) {
+        break;
       }
     }
+
+    scanner.close();
   }
 }
