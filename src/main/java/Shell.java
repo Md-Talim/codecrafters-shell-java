@@ -8,9 +8,10 @@ class Shell {
     void execute();
   }
 
-  final private Map<String, BuiltinCommand> builtins = new HashMap<>();
+  private Executable executable = new Executable();
+  private final Map<String, BuiltinCommand> builtins = new HashMap<>();
   private List<String> arguments = new ArrayList<>();
-  final private String command;
+  private final String command;
 
   Shell(String line) {
     Parser parser = new Parser(line);
@@ -41,7 +42,13 @@ class Shell {
           if (builtins.containsKey(commandName)) {
             System.out.println(commandName + " is a shell builtin");
           } else {
-            System.out.println(commandName + ": not found");
+            String location = executable.getLocation(commandName);
+
+            if (location != null) {
+              System.out.println(commandName + " is " + location);
+            } else {
+              System.out.println(commandName + ": not found");
+            }
           }
         });
 
