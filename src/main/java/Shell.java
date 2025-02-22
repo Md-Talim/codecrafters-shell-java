@@ -1,3 +1,7 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,15 +12,13 @@ class Shell {
     void execute();
   }
 
-  private Executable executable = new Executable();
+  private Executable executable;
   private final Map<String, BuiltinCommand> builtins = new HashMap<>();
   private List<String> arguments = new ArrayList<>();
-  private final String command;
+  private String command;
 
-  Shell(String line) {
-    Parser parser = new Parser(line);
-    this.arguments = parser.parse();
-    this.command = arguments.get(0);
+  Shell() {
+    executable = new Executable();
 
     builtins.put(
         "echo",
@@ -59,21 +61,38 @@ class Shell {
         });
   }
 
-  private void executeBuiltin() {
+  private void execute() {
     BuiltinCommand builtinCommand = builtins.get(command);
 
     if (builtinCommand != null) {
       builtinCommand.execute();
     } else {
-      System.out.println(command + ": command not found");
-    }
-  }
+      ProcessBuilder pb = new ProcessBuilder(arguments);
 
-  public void execute() {
-    executeBuiltin();
+      try {
+        Process process = pb.start();
+        InputStream is = process.getInputStream();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+
+        String line;
+        while ((line = reader.readLine()) != null) {
+          System.out.println(line);
+        }
+      } catch (IOException e) {
+        System.out.println(command + ": command not found");
+      }
+    }
   }
 
   public boolean isExitCommand() {
     return command.startsWith("exit");
+  }
+
+  public void run(String line) {
+    Parser parser = new Parser(line);
+    this.arguments = parser.parse();
+    this.command = arguments.get(0);
+
+    execute();
   }
 }
