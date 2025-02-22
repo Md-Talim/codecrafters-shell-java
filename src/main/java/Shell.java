@@ -13,12 +13,14 @@ class Shell {
   }
 
   private Executable executable;
+  private Navigator navigator;
   private final Map<String, BuiltinCommand> builtins = new HashMap<>();
   private List<String> arguments = new ArrayList<>();
   private String command;
 
   Shell() {
     executable = new Executable();
+    navigator = new Navigator();
 
     builtins.put(
         "echo",
@@ -30,6 +32,18 @@ class Shell {
             if (i != lastIdx) System.out.print(" ");
           }
           System.out.println();
+        });
+
+    builtins.put(
+        "exit",
+        () -> {
+          return;
+        });
+
+    builtins.put(
+        "pwd",
+        () -> {
+          System.out.println(navigator.getWorkingDirectory());
         });
 
     builtins.put(
@@ -52,12 +66,6 @@ class Shell {
               System.out.println(commandName + ": not found");
             }
           }
-        });
-
-    builtins.put(
-        "exit",
-        () -> {
-          return;
         });
   }
 
