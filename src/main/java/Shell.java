@@ -22,51 +22,50 @@ class Shell {
     executable = new Executable();
     navigator = new Navigator();
 
-    builtins.put(
-        "echo",
-        () -> {
-          int lastIdx = arguments.size() - 1;
-          for (int i = 1; i < arguments.size(); i++) {
-            System.out.print(arguments.get(i));
+    builtins.put("echo", () -> {
+      int lastIdx = arguments.size() - 1;
+      for (int i = 1; i < arguments.size(); i++) {
+        System.out.print(arguments.get(i));
 
-            if (i != lastIdx) System.out.print(" ");
-          }
-          System.out.println();
-        });
+        if (i != lastIdx)
+          System.out.print(" ");
+      }
+      System.out.println();
+    });
 
-    builtins.put(
-        "exit",
-        () -> {
-          return;
-        });
+    builtins.put("exit", () -> { return; });
 
     builtins.put(
-        "pwd",
-        () -> {
-          System.out.println(navigator.getWorkingDirectory());
-        });
+        "pwd", () -> { System.out.println(navigator.getWorkingDirectory()); });
 
-    builtins.put(
-        "type",
-        () -> {
-          if (arguments.size() < 2) {
-            System.out.println("Usage: type <command>");
-            return;
-          }
+    builtins.put("cd", () -> {
+      String directory = arguments.get(1);
+      if (navigator.isDirectory(directory)) {
+        navigator.setWorkingDirectory(directory);
+      } else {
+        System.out.println("cd: " + directory + ": No such file or directory");
+      }
+    });
 
-          String commandName = arguments.get(1);
-          if (builtins.containsKey(commandName)) {
-            System.out.println(commandName + " is a shell builtin");
-          } else {
-            String location = executable.getLocation(commandName);
+    builtins.put("type", () -> {
+      if (arguments.size() < 2) {
+        System.out.println("Usage: type <command>");
+        return;
+      }
 
-            if (location != null) {
-              System.out.println(commandName + " is " + location);
-            } else {
-              System.out.println(commandName + ": not found");
-            }
-          }
-        });
+      String commandName = arguments.get(1);
+      if (builtins.containsKey(commandName)) {
+        System.out.println(commandName + " is a shell builtin");
+      } else {
+        String location = executable.getLocation(commandName);
+
+        if (location != null) {
+          System.out.println(commandName + " is " + location);
+        } else {
+          System.out.println(commandName + ": not found");
+        }
+      }
+    });
   }
 
   private void execute() {
@@ -92,9 +91,7 @@ class Shell {
     }
   }
 
-  public boolean isExitCommand() {
-    return command.startsWith("exit");
-  }
+  public boolean isExitCommand() { return command.startsWith("exit"); }
 
   public void run(String line) {
     Parser parser = new Parser(line);
