@@ -2,7 +2,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,14 +16,15 @@ class Shell {
         void execute();
     }
 
-    private Executable executable;
     private Navigator navigator;
     private final Map<String, BuiltinCommand> builtins = new HashMap<>();
     private List<String> arguments = new ArrayList<>();
     private String command;
+    List<String> pathList;
 
     Shell() {
-        executable = new Executable();
+        String $path = System.getenv("PATH");
+        pathList = Arrays.asList($path.split(":"));
         navigator = new Navigator();
 
         builtins.put("echo", () -> {
@@ -58,7 +63,7 @@ class Shell {
             if (builtins.containsKey(commandName)) {
                 System.out.println(commandName + " is a shell builtin");
             } else {
-                String location = executable.getLocation(commandName);
+                String location = getLocation(commandName);
 
                 if (location != null) {
                     System.out.println(commandName + " is " + location);
@@ -90,6 +95,18 @@ class Shell {
                 System.out.println(command + ": command not found");
             }
         }
+    }
+
+    private String getLocation(String program) {
+        for (String location : pathList) {
+            Path path = Paths.get(location, program);
+
+            if (Files.isExecutable(path)) {
+                return path.toString();
+            }
+        }
+
+        return null;
     }
 
     public boolean isExitCommand() {
