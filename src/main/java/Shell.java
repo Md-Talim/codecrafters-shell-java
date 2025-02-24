@@ -114,6 +114,8 @@ class Shell {
     }
 
     public void run(String line) {
+        String $path = System.getenv("PATH");
+        pathList = Arrays.asList($path.split(":"));
         Parser parser = new Parser(line);
         this.arguments = parser.parse();
         this.command = arguments.get(0);
