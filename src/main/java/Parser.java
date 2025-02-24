@@ -2,53 +2,55 @@ import java.util.ArrayList;
 import java.util.List;
 
 class Parser {
-  private static final char END = '\0';
-  private static final char SPACE = ' ';
+    private static final char END = '\0';
+    private static final char SPACE = ' ';
 
-  private final String line;
-  private int index;
-  private List<String> arguments;
+    private final String line;
+    private int index;
+    private List<String> arguments;
 
-  Parser(String line) {
-    this.line = line;
-    this.index = -1;
-    this.arguments = new ArrayList<>();
-  }
-
-  public List<String> parse() {
-    String argument;
-
-    while ((argument = nextArgument()) != null) {
-      arguments.add(argument);
+    Parser(String line) {
+        this.line = line;
+        this.index = -1;
+        this.arguments = new ArrayList<>();
     }
 
-    return arguments;
-  }
+    public List<String> parse() {
+        String argument;
 
-  private String nextArgument() {
-    StringBuilder builder = new StringBuilder();
-
-    char character;
-    while ((character = next()) != END) {
-      switch (character) {
-        case SPACE -> {
-          if (builder.length() > 0) return builder.toString();
+        while ((argument = nextArgument()) != null) {
+            arguments.add(argument);
         }
-        default -> builder.append(character);
-      }
+
+        return arguments;
     }
 
-    if (builder.length() > 0) return builder.toString();
+    private String nextArgument() {
+        StringBuilder builder = new StringBuilder();
 
-    return null;
-  }
+        char character;
+        while ((character = next()) != END) {
+            switch (character) {
+                case SPACE -> {
+                    if (builder.length() > 0)
+                        return builder.toString();
+                }
+                default -> builder.append(character);
+            }
+        }
 
-  private char next() {
-    index++;
-    if (index >= line.length()) {
-      return END;
+        if (builder.length() > 0)
+            return builder.toString();
+
+        return null;
     }
 
-    return line.charAt(index);
-  }
+    private char next() {
+        index++;
+        if (index >= line.length()) {
+            return END;
+        }
+
+        return line.charAt(index);
+    }
 }
