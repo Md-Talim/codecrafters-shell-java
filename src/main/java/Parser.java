@@ -6,6 +6,7 @@ class Parser {
     private static final char SPACE = ' ';
     private static final char SINGLE = '\'';
     private static final char DOUBLE = '"';
+    private static final char BACKSLASH = '\\';
 
     private final String line;
     private int index;
@@ -36,6 +37,10 @@ class Parser {
                 case SPACE -> {
                     if (builder.length() > 0)
                         return builder.toString();
+                }
+                case BACKSLASH -> {
+                    if ((character = next()) != END)
+                        builder.append(character);
                 }
                 case SINGLE -> {
                     while ((character = next()) != END && character != SINGLE)
