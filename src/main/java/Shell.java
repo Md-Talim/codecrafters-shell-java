@@ -2,6 +2,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,11 +41,7 @@ class Shell {
 
         builtins.put("cd", () -> {
             String directory = arguments.get(1);
-            if (navigator.isDirectory(directory)) {
-                navigator.setWorkingDirectory(directory);
-            } else {
-                System.out.println("cd: " + directory + ": No such file or directory");
-            }
+            navigator.setWorkingDirectory(directory);
         });
 
         builtins.put("type", () -> {

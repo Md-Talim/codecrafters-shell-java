@@ -9,8 +9,7 @@ class Navigator {
         this.currentWorkingDirectory = System.getProperty("user.dir");
     }
 
-    public boolean isDirectory(String directory) {
-        Path path = Paths.get(directory);
+    private boolean isDirectory(Path path) {
         return Files.exists(path) && Files.isDirectory(path);
     }
 
@@ -19,6 +18,18 @@ class Navigator {
     }
 
     public void setWorkingDirectory(String directory) {
-        currentWorkingDirectory = directory;
+        Path path = Paths.get(directory);
+
+        if (directory.startsWith(".")) {
+            path = Paths.get(currentWorkingDirectory, directory);
+        }
+
+        Path absolutePath = path.normalize().toAbsolutePath();
+
+        if (isDirectory(absolutePath)) {
+            currentWorkingDirectory = absolutePath.toString();
+        } else {
+            System.out.println("cd: " + directory + ": No such file or directory");
+        }
     }
 }
