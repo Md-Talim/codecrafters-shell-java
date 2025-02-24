@@ -47,8 +47,18 @@ class Parser {
                         builder.append(character);
                 }
                 case DOUBLE -> {
-                    while ((character = next()) != END && character != DOUBLE)
+                    while ((character = next()) != END && character != DOUBLE) {
+                        // current character is backslash
+                        // map it to the next character
+                        if (character == BACKSLASH) {
+                            character = next(); // character after backslash
+                                                //
+                            if (!(character == BACKSLASH || character == DOUBLE))
+                                builder.append(BACKSLASH);
+                        }
+
                         builder.append(character);
+                    }
                 }
                 default -> builder.append(character);
             }
