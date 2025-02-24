@@ -4,6 +4,7 @@ import java.util.List;
 class Parser {
     private static final char END = '\0';
     private static final char SPACE = ' ';
+    private static final char SINGLE = '\'';
 
     private final String line;
     private int index;
@@ -34,6 +35,10 @@ class Parser {
                 case SPACE -> {
                     if (builder.length() > 0)
                         return builder.toString();
+                }
+                case SINGLE -> {
+                    while ((character = next()) != END && character != SINGLE)
+                        builder.append(character);
                 }
                 default -> builder.append(character);
             }
