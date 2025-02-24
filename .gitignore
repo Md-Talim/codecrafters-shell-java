@@ -5,3 +5,4 @@ out/
 .settings/
 .project
 .classpath
+bin/

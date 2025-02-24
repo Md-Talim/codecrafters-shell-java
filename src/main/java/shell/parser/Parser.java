@@ -1,7 +1,9 @@
+package shell.parser;
+
 import java.util.ArrayList;
 import java.util.List;
 
-class Parser {
+public class Parser {
     private static final char END = '\0';
     private static final char SPACE = ' ';
     private static final char SINGLE = '\'';
@@ -12,7 +14,7 @@ class Parser {
     private int index;
     private List<String> arguments;
 
-    Parser(String line) {
+    public Parser(String line) {
         this.line = line;
         this.index = -1;
         this.arguments = new ArrayList<>();
@@ -52,7 +54,6 @@ class Parser {
                         // map it to the next character
                         if (character == BACKSLASH) {
                             character = next(); // character after backslash
-                                                //
                             if (!(character == BACKSLASH || character == DOUBLE))
                                 builder.append(BACKSLASH);
                         }
