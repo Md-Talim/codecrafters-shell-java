@@ -2,8 +2,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +38,12 @@ class Shell {
         builtins.put("pwd", () -> { System.out.println(navigator.getWorkingDirectory()); });
 
         builtins.put("cd", () -> {
+            // Set to home directory if no arguments provided
+            if (arguments.size() < 2) {
+                navigator.setWorkingDirectory("~");
+                return;
+            }
+
             String directory = arguments.get(1);
             navigator.setWorkingDirectory(directory);
         });

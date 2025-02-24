@@ -4,9 +4,11 @@ import java.nio.file.Paths;
 
 class Navigator {
     private String currentWorkingDirectory;
+    private String homeDirectory;
 
     Navigator() {
-        this.currentWorkingDirectory = System.getProperty("user.dir");
+        homeDirectory = System.getenv("HOME");
+        currentWorkingDirectory = System.getProperty("user.dir");
     }
 
     private boolean isDirectory(Path path) {
@@ -22,6 +24,12 @@ class Navigator {
 
         if (directory.startsWith(".")) {
             path = Paths.get(currentWorkingDirectory, directory);
+        } else if (directory.startsWith("~")) {
+            path = Paths.get(homeDirectory);
+
+            if (directory.length() > 2) {
+                path = Paths.get(homeDirectory, directory.substring(2));
+            }
         }
 
         Path absolutePath = path.normalize().toAbsolutePath();

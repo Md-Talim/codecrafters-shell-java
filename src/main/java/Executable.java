@@ -15,7 +15,7 @@ class Executable {
 
     public String getLocation(String program) {
         for (String location : pathList) {
-            Path path = Paths.get(location + "/" + program);
+            Path path = Paths.get(location, program);
 
             if (Files.isExecutable(path)) {
                 return path.toString();
