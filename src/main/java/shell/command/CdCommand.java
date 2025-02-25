@@ -16,7 +16,7 @@ public class CdCommand extends BuiltinCommand {
     }
 
     @Override
-    public void execute(List<String> args, Redirection _redirection) {
+    public void execute(List<String> args, Redirection redirection) {
         if (args.size() < 2) {
             throw new CommandExecutionException("cd: missing directory argument.");
         }
@@ -27,6 +27,9 @@ public class CdCommand extends BuiltinCommand {
         try {
             environment.changeDirectory(newPath);
         } catch (Exception e) {
+            // if (redirection != null && redirection.isStderr())
+            // FileUtils.writeToFile("cd: " + e.getMessage(), redirection.getFile());
+            // else
             throw new CommandExecutionException("cd: " + e.getMessage());
         }
     }

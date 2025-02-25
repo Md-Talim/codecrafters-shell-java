@@ -15,6 +15,10 @@ public class FileUtils {
             parent.mkdirs();
         }
 
+        if (!file.exists()) {
+            file.createNewFile();
+        }
+
         try (PrintWriter writer = new PrintWriter(new FileWriter(file))) {
             writer.print(content);
         }

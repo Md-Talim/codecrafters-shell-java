@@ -14,6 +14,14 @@ public class EchoCommand implements Command {
 
         if (redirection != null) {
             try {
+                FileUtils.writeToFile("", redirection.getFile());
+            } catch (IOException e) {
+                System.err.println("echo: " + e.getMessage());
+            }
+        }
+
+        if (redirection != null && redirection.isStdout()) {
+            try {
                 FileUtils.writeToFile(output + "\n", redirection.getFile());
             } catch (IOException e) {
                 System.err.println("echo: " + e.getMessage());

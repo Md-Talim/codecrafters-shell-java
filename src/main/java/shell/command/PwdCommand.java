@@ -19,7 +19,7 @@ public class PwdCommand extends BuiltinCommand {
     public void execute(List<String> args, Redirection redirection) {
         Path currentPath = environment.getCurrentDirectory().toAbsolutePath();
 
-        if (redirection != null) {
+        if (redirection != null && redirection.isStdout()) {
             try {
                 FileUtils.writeToFile(currentPath.toString(), redirection.getFile());
             } catch (Exception e) {

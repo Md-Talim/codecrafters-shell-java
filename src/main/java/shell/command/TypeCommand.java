@@ -27,7 +27,7 @@ public class TypeCommand extends BuiltinCommand {
         }
 
         String commandName = args.get(1);
-        String output;
+        String output = "", error = "";
 
         if (builtins.containsKey(commandName)) {
             output = commandName + " is a shell builtin";
@@ -36,19 +36,25 @@ public class TypeCommand extends BuiltinCommand {
             if (commandPath != null)
                 output = commandName + " is " + commandPath;
             else
-                throw new CommandExecutionException(commandName + ": not found");
+                error = commandName + ": not found";
         }
 
-        if (redirection != null) {
-            try {
+        if (redirection == null) {
+            System.out.println(output + error);
+            return;
+        }
+
+        try {
+            if (redirection.isStdout()) {
                 FileUtils.writeToFile(output, redirection.getFile());
-            } catch (Exception e) {
-                System.err.println("type: " + e.getMessage());
+                System.out.println(error);
+            } else {
+                FileUtils.writeToFile(error, redirection.getFile());
+                System.out.println(output);
             }
-        } else {
-            System.out.println(output);
+        } catch (Exception e) {
+            System.err.println("type: " + e.getMessage());
         }
-
     }
 
     private String findCommandInPath(String commandName) {

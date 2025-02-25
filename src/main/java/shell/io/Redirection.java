@@ -16,4 +16,12 @@ public class Redirection {
     public int getDescriptor() {
         return descriptor;
     }
+
+    public boolean isStderr() {
+        return descriptor == 2;
+    }
+
+    public boolean isStdout() {
+        return descriptor == 1;
+    }
 }

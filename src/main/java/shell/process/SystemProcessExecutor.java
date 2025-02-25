@@ -13,9 +13,21 @@ public class SystemProcessExecutor implements ProcessExecutor {
             ProcessBuilder processBuilder = new ProcessBuilder(args);
 
             if (redirection != null) {
-                // Redirect output to file
-                processBuilder.redirectOutput(new File(redirection.getFile()));
-                processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT);
+                File file = new File(redirection.getFile());
+
+                // Create parent directories if they don't exist
+                File parent = file.getParentFile();
+                if (parent != null && !parent.exists()) {
+                    parent.mkdirs();
+                }
+
+                if (redirection.isStderr()) {
+                    processBuilder.redirectError(file);
+                    processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+                } else {
+                    processBuilder.redirectOutput(file);
+                    processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT);
+                }
             } else {
                 // Default behavior - inherit all IO
                 processBuilder.inheritIO();
