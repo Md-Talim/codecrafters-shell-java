@@ -15,28 +15,17 @@ public class SystemProcessExecutor implements ProcessExecutor {
             if (redirection != null) {
                 File file = new File(redirection.getFile());
 
-                // Create parent directories if they don't exist
-                File parent = file.getParentFile();
-                if (parent != null && !parent.exists()) {
-                    parent.mkdirs();
-                }
+                createParentDirs(file);
 
                 if (redirection.isStderr()) {
                     processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
-                    if (redirection.isAppend())
-                        processBuilder.redirectError(ProcessBuilder.Redirect.appendTo(file));
-                    else
-                        processBuilder.redirectError(file);
+                    processBuilder.redirectError(getRedirect(file, redirection.isAppend()));
                 } else {
-                    if (redirection.isAppend())
-                        processBuilder.redirectOutput(ProcessBuilder.Redirect.appendTo(file));
-                    else
-                        processBuilder.redirectOutput(file);
+                    processBuilder.redirectOutput(getRedirect(file, redirection.isAppend()));
                     processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT);
                 }
             } else {
-                // Default behavior - inherit all IO
-                processBuilder.inheritIO();
+                processBuilder.inheritIO(); // Default behavior - inherit all IO
             }
 
             Process process = processBuilder.start();
@@ -47,5 +36,16 @@ public class SystemProcessExecutor implements ProcessExecutor {
             Thread.currentThread().interrupt();
             throw new ProcessExecutionException("Process execution interrupted", e);
         }
+    }
+
+    private void createParentDirs(File file) {
+        File parent = file.getParentFile();
+        if (parent != null && !parent.exists()) {
+            parent.mkdirs();
+        }
+    }
+
+    private ProcessBuilder.Redirect getRedirect(File file, boolean isAppend) {
+        return isAppend ? ProcessBuilder.Redirect.appendTo(file) : ProcessBuilder.Redirect.to(file);
     }
 }

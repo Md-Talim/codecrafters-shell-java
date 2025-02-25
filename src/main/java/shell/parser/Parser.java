@@ -28,22 +28,14 @@ public class Parser {
         String argument;
 
         while ((argument = nextArgument()) != null) {
-            if (argument.equals(">") || argument.equals("1>") || argument.equals("2>")) {
+            if (isRedirectionOperator(argument)) {
                 String file = nextArgument();
                 if (file == null) {
-                    throw new ParseException("Expect file name after >");
+                    throw new ParseException("Expect file name after redirection operator");
                 }
-
-                int descriptor = argument.equals("2>") ? 2 : 1;
-                redirection = new Redirection(file, descriptor, false);
-                break;
-            } else if (argument.equals(">>") || argument.equals("1>>")) {
-                String file = nextArgument();
-                if (file == null) {
-                    throw new ParseException("Expect file name after >");
-                }
-
-                redirection = new Redirection(file, 1, true);
+                boolean append = argument.contains(">>");
+                int descriptor = argument.contains("2") ? 2 : 1;
+                redirection = new Redirection(file, descriptor, append);
                 break;
             }
             arguments.add(argument);
@@ -104,5 +96,10 @@ public class Parser {
         }
 
         return line.charAt(index);
+    }
+
+    private boolean isRedirectionOperator(String token) {
+        return token.equals(">") || token.equals("1>") || token.equals("2>") ||
+                token.equals(">>") || token.equals("1>>") || token.equals("2>>");
     }
 }
