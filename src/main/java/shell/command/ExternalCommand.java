@@ -2,6 +2,7 @@ package shell.command;
 
 import java.util.List;
 
+import shell.io.Redirection;
 import shell.process.ProcessExecutor;
 
 public class ExternalCommand implements Command {
@@ -14,7 +15,7 @@ public class ExternalCommand implements Command {
     }
 
     @Override
-    public void execute(List<String> args) {
-        executor.execute(programPath, args);
+    public void execute(List<String> args, Redirection redirection) {
+        executor.execute(programPath, args, redirection);
     }
 }

@@ -7,6 +7,7 @@ import java.util.Map;
 import shell.command.*;
 import shell.environment.Environment;
 import shell.environment.SystemEnvironment;
+import shell.io.Redirection;
 import shell.parser.Parser;
 import shell.process.ProcessExecutor;
 import shell.process.SystemProcessExecutor;
@@ -38,6 +39,7 @@ public class Shell {
         try {
             Parser parser = new Parser(input);
             List<String> args = parser.parse();
+            Redirection redirection = parser.getRedirection();
 
             if (args.isEmpty()) {
                 return;
@@ -48,7 +50,7 @@ public class Shell {
                 commandName,
                 new ExternalCommand(commandName, processExecutor)
             );
-            command.execute(args);
+            command.execute(args, redirection);
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }

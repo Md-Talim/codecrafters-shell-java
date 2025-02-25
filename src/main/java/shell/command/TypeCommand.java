@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import shell.environment.Environment;
+import shell.io.FileUtils;
+import shell.io.Redirection;
 
 public class TypeCommand extends BuiltinCommand {
     private final Map<String, Command> builtins;
@@ -19,24 +21,34 @@ public class TypeCommand extends BuiltinCommand {
     }
 
     @Override
-    public void execute(List<String> args) {
+    public void execute(List<String> args, Redirection redirection) {
         if (args.size() < 2) {
             throw new CommandExecutionException("type: missing command name argument");
         }
 
         String commandName = args.get(1);
+        String output;
 
         if (builtins.containsKey(commandName)) {
-            System.out.println(commandName + " is a shell builtin");
-            return;
+            output = commandName + " is a shell builtin";
+        } else {
+            String commandPath = findCommandInPath(commandName);
+            if (commandPath != null)
+                output = commandName + " is " + commandPath;
+            else
+                throw new CommandExecutionException(commandName + ": not found");
         }
 
-        String commandPath = findCommandInPath(commandName);
-        if (commandPath != null) {
-            System.out.println(commandName + " is " + commandPath);
+        if (redirection != null) {
+            try {
+                FileUtils.writeToFile(output, redirection.getFile());
+            } catch (Exception e) {
+                System.err.println("type: " + e.getMessage());
+            }
         } else {
-            throw new CommandExecutionException(commandName + ": not found");
+            System.out.println(output);
         }
+
     }
 
     private String findCommandInPath(String commandName) {

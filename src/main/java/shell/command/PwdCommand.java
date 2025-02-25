@@ -4,6 +4,8 @@ import java.nio.file.Path;
 import java.util.List;
 
 import shell.environment.Environment;
+import shell.io.FileUtils;
+import shell.io.Redirection;
 
 public class PwdCommand extends BuiltinCommand {
     private final Environment environment;
@@ -14,8 +16,17 @@ public class PwdCommand extends BuiltinCommand {
     }
 
     @Override
-    public void execute(List<String> args) {
-        Path currentPath = environment.getCurrentDirectory();
-        System.out.println(currentPath.toAbsolutePath());
+    public void execute(List<String> args, Redirection redirection) {
+        Path currentPath = environment.getCurrentDirectory().toAbsolutePath();
+
+        if (redirection != null) {
+            try {
+                FileUtils.writeToFile(currentPath.toString(), redirection.getFile());
+            } catch (Exception e) {
+                throw new CommandExecutionException("pwd: " + e.getMessage());
+            }
+        } else {
+            System.out.println(currentPath);
+        }
     }
 }

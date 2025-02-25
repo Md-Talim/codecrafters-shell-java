@@ -5,6 +5,7 @@ import java.nio.file.Paths;
 import java.util.List;
 
 import shell.environment.Environment;
+import shell.io.Redirection;
 
 public class CdCommand extends BuiltinCommand {
     private final Environment environment;
@@ -15,7 +16,7 @@ public class CdCommand extends BuiltinCommand {
     }
 
     @Override
-    public void execute(List<String> args) {
+    public void execute(List<String> args, Redirection _redirection) {
         if (args.size() < 2) {
             throw new CommandExecutionException("cd: missing directory argument.");
         }

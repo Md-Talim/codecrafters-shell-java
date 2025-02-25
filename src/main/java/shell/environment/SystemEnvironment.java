@@ -24,11 +24,11 @@ public class SystemEnvironment implements Environment {
         Path newPath = resolveDirectory(path);
 
         if (!Files.exists(newPath)) {
-            throw new EnvironmentException("cd: " + newPath + ": No such file or directory");
+            throw new EnvironmentException(newPath + ": No such file or directory");
         }
 
         if (!Files.isDirectory(newPath)) {
-            throw new EnvironmentException("cd: " + newPath + ": No such file or directory");
+            throw new EnvironmentException(newPath + ": No such file or directory");
         }
 
         try {
@@ -47,7 +47,7 @@ public class SystemEnvironment implements Environment {
         String pathStr = path.toString();
 
         if (pathStr.startsWith("~")) {
-            String home = System.getProperty("user.home");
+            String home = getEnvironmentVariable("HOME");
             return Paths.get(home, pathStr.substring(1));
         }
 
