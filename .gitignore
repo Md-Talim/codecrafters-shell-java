@@ -1,7 +1,8 @@
+.project
+.classpath
 *.jar
+bin/
 target/
 .idea/
 out/
 .settings/
-.project
-.classpath

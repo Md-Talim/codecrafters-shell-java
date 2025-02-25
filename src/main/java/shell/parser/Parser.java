@@ -1,18 +1,24 @@
+package shell.parser;
+
 import java.util.ArrayList;
 import java.util.List;
 
-class Parser {
+import shell.io.Redirection;
+
+public class Parser {
     private static final char END = '\0';
     private static final char SPACE = ' ';
     private static final char SINGLE = '\'';
     private static final char DOUBLE = '"';
     private static final char BACKSLASH = '\\';
 
+    private Redirection redirection;
+
     private final String line;
     private int index;
     private List<String> arguments;
 
-    Parser(String line) {
+    public Parser(String line) {
         this.line = line;
         this.index = -1;
         this.arguments = new ArrayList<>();
@@ -22,10 +28,23 @@ class Parser {
         String argument;
 
         while ((argument = nextArgument()) != null) {
+            if (argument.equals(">") || argument.equals("1>")) {
+                String file = nextArgument();
+                if (file == null) {
+                    throw new ParseException("Expect file name after >");
+                }
+
+                redirection = new Redirection(file, 1);
+                break;
+            }
             arguments.add(argument);
         }
 
         return arguments;
+    }
+
+    public Redirection getRedirection() {
+        return redirection;
     }
 
     private String nextArgument() {
@@ -52,7 +71,6 @@ class Parser {
                         // map it to the next character
                         if (character == BACKSLASH) {
                             character = next(); // character after backslash
-                                                //
                             if (!(character == BACKSLASH || character == DOUBLE))
                                 builder.append(BACKSLASH);
                         }
