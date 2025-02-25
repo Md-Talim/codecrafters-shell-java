@@ -14,7 +14,7 @@ public class EchoCommand implements Command {
 
         if (redirection != null) {
             try {
-                FileUtils.writeToFile("", redirection.getFile());
+                FileUtils.writeToFile("", redirection.getFile(), redirection.isAppend());
             } catch (IOException e) {
                 System.err.println("echo: " + e.getMessage());
             }
@@ -22,7 +22,7 @@ public class EchoCommand implements Command {
 
         if (redirection != null && redirection.isStdout()) {
             try {
-                FileUtils.writeToFile(output + "\n", redirection.getFile());
+                FileUtils.writeToFile(output + "\n", redirection.getFile(), redirection.isAppend());
             } catch (IOException e) {
                 System.err.println("echo: " + e.getMessage());
             }

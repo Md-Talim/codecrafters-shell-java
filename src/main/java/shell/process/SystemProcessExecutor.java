@@ -22,10 +22,16 @@ public class SystemProcessExecutor implements ProcessExecutor {
                 }
 
                 if (redirection.isStderr()) {
-                    processBuilder.redirectError(file);
                     processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+                    if (redirection.isAppend())
+                        processBuilder.redirectError(ProcessBuilder.Redirect.appendTo(file));
+                    else
+                        processBuilder.redirectError(file);
                 } else {
-                    processBuilder.redirectOutput(file);
+                    if (redirection.isAppend())
+                        processBuilder.redirectOutput(ProcessBuilder.Redirect.appendTo(file));
+                    else
+                        processBuilder.redirectOutput(file);
                     processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT);
                 }
             } else {

@@ -3,10 +3,12 @@ package shell.io;
 public class Redirection {
     private final String file;
     private final int descriptor;
+    private final boolean append;
 
-    public Redirection(String file, int descriptor) {
+    public Redirection(String file, int descriptor, boolean append) {
         this.file = file;
         this.descriptor = descriptor;
+        this.append = append;
     }
 
     public String getFile() {
@@ -23,5 +25,9 @@ public class Redirection {
 
     public boolean isStdout() {
         return descriptor == 1;
+    }
+
+    public boolean isAppend() {
+        return append;
     }
 }

@@ -21,7 +21,7 @@ public class PwdCommand extends BuiltinCommand {
 
         if (redirection != null && redirection.isStdout()) {
             try {
-                FileUtils.writeToFile(currentPath.toString(), redirection.getFile());
+                FileUtils.writeToFile(currentPath.toString(), redirection.getFile(), redirection.isAppend());
             } catch (Exception e) {
                 throw new CommandExecutionException("pwd: " + e.getMessage());
             }

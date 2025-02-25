@@ -35,7 +35,15 @@ public class Parser {
                 }
 
                 int descriptor = argument.equals("2>") ? 2 : 1;
-                redirection = new Redirection(file, descriptor);
+                redirection = new Redirection(file, descriptor, false);
+                break;
+            } else if (argument.equals(">>") || argument.equals("1>>")) {
+                String file = nextArgument();
+                if (file == null) {
+                    throw new ParseException("Expect file name after >");
+                }
+
+                redirection = new Redirection(file, 1, true);
                 break;
             }
             arguments.add(argument);

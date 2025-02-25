@@ -27,9 +27,6 @@ public class CdCommand extends BuiltinCommand {
         try {
             environment.changeDirectory(newPath);
         } catch (Exception e) {
-            // if (redirection != null && redirection.isStderr())
-            // FileUtils.writeToFile("cd: " + e.getMessage(), redirection.getFile());
-            // else
             throw new CommandExecutionException("cd: " + e.getMessage());
         }
     }

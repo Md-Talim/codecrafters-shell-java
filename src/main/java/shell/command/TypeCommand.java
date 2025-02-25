@@ -46,10 +46,10 @@ public class TypeCommand extends BuiltinCommand {
 
         try {
             if (redirection.isStdout()) {
-                FileUtils.writeToFile(output, redirection.getFile());
+                FileUtils.writeToFile(output, redirection.getFile(), redirection.isAppend());
                 System.out.println(error);
             } else {
-                FileUtils.writeToFile(error, redirection.getFile());
+                FileUtils.writeToFile(error, redirection.getFile(), redirection.isAppend());
                 System.out.println(output);
             }
         } catch (Exception e) {
