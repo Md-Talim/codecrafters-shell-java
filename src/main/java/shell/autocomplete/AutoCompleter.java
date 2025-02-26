@@ -81,7 +81,7 @@ public class AutoCompleter {
         // If there are multiple matches but no common prefix,
         // display all options if bell was already rung
         if (bellRang) {
-            System.out.print(candidates.stream().map(beginning::concat).collect(Collectors.joining(" ", "\n", "\n")));
+            System.out.print(candidates.stream().map(beginning::concat).collect(Collectors.joining("  ", "\n", "\n")));
             System.out.print("$ ");
             System.out.print(beginning);
             System.out.flush();
