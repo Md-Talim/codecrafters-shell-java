@@ -5,15 +5,15 @@ import java.util.List;
 import shell.io.Redirection;
 
 public class ExitCommand extends BuiltinCommand {
-    private final Runnable exitHandler;
+    // private final Runnable exitHandler;
 
-    public ExitCommand(Runnable exitHandler) {
+    public ExitCommand() {
         super("exit");
-        this.exitHandler = exitHandler;
+        // this.exitHandler = exitHandler;
     }
 
     @Override
     public void execute(List<String> _args, Redirection _redirection) {
-        exitHandler.run();
+        System.exit(0);
     }
 }
